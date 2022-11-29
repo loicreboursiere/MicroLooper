@@ -56,7 +56,7 @@ public:
         Send also feedbacks (sample to ms to String) to Grain GUI elements : 
         grainInPointFeedbackLabel, grainOutPointFeedbackLabel, grainDurationFeedbackLabel
     */
-    void makeGrain();
+    void makeGrain( int minDuration, int maxDuration );
 
     /** Change the speed of the grain generation.
 
@@ -71,6 +71,23 @@ private:
     //==============================================================================
     // Your private member variables go here...
     void timerCallback() final;
+
+    struct GrainsConfig {
+        int minDuration;
+        int maxDuration;
+        int minStart;
+        int maxStart;
+        int density;
+    };
+
+    struct Grain {
+        int start_ms;
+        int stop_ms;
+        int duration_ms;
+        int start_sample;
+        int stop_sample;
+        int duration_sample;
+    };
 
     juce::TextButton   loadButton;
     juce::TextButton   loadDefaultSoundButton;
@@ -106,14 +123,18 @@ private:
 
     bool isLooping = false, isGranularizing=false, useMetro=false, computeGrainInAndOut=false;
 
-    int filePosition, grainStartSample, grainStopSample, grainDurationSample;
+    int filePosition;// , grainStartSample, grainStopSample, grainDurationSample;
 
     double samplingRate;
 
     // Granular synth parameters
-    int minDuration, maxDuration;
-    int density;
+    int minDurationFromGUI, maxDurationFromGUI;
+    int densityFromGUI;
 
+    GrainsConfig ranges;
+    Grain currentGrain;
+
+    //juce::Array<Grain> allGrains;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

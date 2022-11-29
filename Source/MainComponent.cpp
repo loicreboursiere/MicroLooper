@@ -3,22 +3,6 @@
 //==============================================================================
 MainComponent::MainComponent()
 {
-    /*
-    // First basic layout
-    addAndMakeVisible (loadButton);
-    loadButton.setButtonText ("Open...");
-    loadButton.onClick = [this] { openButtonClicked(); };
-
-    addAndMakeVisible (loadDefaultSoundButton);
-    loadDefaultSoundButton.setButtonText ("Load default");
-    loadDefaultSoundButton.onClick = [this] { loadDefaultSound(); };
-    
-    addAndMakeVisible (loopButton);
-    loopButton.onClick = [this] { loopButton.getToggleState() ? isLooping = true : isLooping = false; };
-    */
-
-    
-
     //Cleaner layout, code more understandable
     addAndMakeVisible         (loadButton);
     addAndMakeVisible         (loadDefaultSoundButton);
@@ -39,68 +23,60 @@ MainComponent::MainComponent()
     addAndMakeVisible         (makeGrainButton);
     addAndMakeVisible         (densityMetroButton);
 
-    durationMinTE             .setEditable(true);
-    durationMaxTE             .setEditable(true);
-    densityTE                 .setEditable(true);
+    durationMinTE                  .setEditable(true);
+    durationMaxTE                  .setEditable(true);
+    densityTE                      .setEditable(true);
 
-    loadButton                .setButtonText ("Open...");
-    loadDefaultSoundButton    .setButtonText ("Default");
-    durationLabel             .setText ("Duration (ms)", juce::dontSendNotification);
-    durationMinTE             .setText ("10", juce::dontSendNotification);
-    durationMaxTE             .setText ("200", juce::dontSendNotification);
-    densityLabel              .setText("Density", juce::dontSendNotification);
-    densityTE                 .setText ("500", juce::dontSendNotification);
-    grainLabel                .setText("GRAIN", juce::dontSendNotification);
-    grainInPointFeedbackLabel .setText("In", juce::dontSendNotification);
-    grainOutPointFeedbackLabel.setText("Out", juce::dontSendNotification);
-    grainDurationFeedbackLabel.setText("Duration", juce::dontSendNotification);
+    loadButton                     .setButtonText ("Open...");
+    loadDefaultSoundButton         .setButtonText ("Default");
+    durationLabel                  .setText ("Duration (ms)", juce::dontSendNotification);
+    durationMinTE                  .setText ("10", juce::dontSendNotification);
+    durationMaxTE                  .setText ("200", juce::dontSendNotification);
+    densityLabel                   .setText("Density", juce::dontSendNotification);
+    densityTE                      .setText ("500", juce::dontSendNotification);
+    grainLabel                     .setText("GRAIN", juce::dontSendNotification);
+    grainInPointFeedbackLabel      .setText("In", juce::dontSendNotification);
+    grainOutPointFeedbackLabel     .setText("Out", juce::dontSendNotification);
+    grainDurationFeedbackLabel     .setText("Duration", juce::dontSendNotification);
 
-    durationLabel              .setJustificationType(juce::Justification::right);
-    durationMinTE              .setJustificationType(juce::Justification::right);
-    durationMaxTE              .setJustificationType(juce::Justification::right);
-    densityLabel               .setJustificationType(juce::Justification::right);
-    densityTE                  .setJustificationType(juce::Justification::right);
+    durationLabel                  .setJustificationType(juce::Justification::right);
+    durationMinTE                  .setJustificationType(juce::Justification::right);
+    durationMaxTE                  .setJustificationType(juce::Justification::right);
+    densityLabel                   .setJustificationType(juce::Justification::right);
+    densityTE                      .setJustificationType(juce::Justification::right);
 
-    durationMinTE              .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
-    durationMaxTE              .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
-    durationMaxTE              .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
-    densityTE                  .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
-    grainInPointFeedbackTE     .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
-    grainOutPointFeedbackTE    .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
-    grainDurationFeedbackTE    .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
+    durationMinTE                  .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
+    durationMaxTE                  .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
+    durationMaxTE                  .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
+    densityTE                      .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
+    grainInPointFeedbackTE         .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
+    grainOutPointFeedbackTE        .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
+    grainDurationFeedbackTE        .setColour(juce::Label::outlineColourId, juce::Colours::darkorange);
     
-    minDuration                    = durationMinTE.getText().getIntValue();
-    maxDuration                    = durationMaxTE.getText().getIntValue();
-    density                        = densityTE.getText().getIntValue();
+    ranges.minDuration             = durationMinTE.getText().getIntValue();
+    ranges.maxDuration             = durationMaxTE.getText().getIntValue();
+    ranges.density                 = densityTE.getText().getIntValue();
 
-    loadButton.onClick = [this] { openButtonClicked(); initStartStop(); };
+    loadButton.onClick             = [this] { openButtonClicked(); initStartStop(); };
     loadDefaultSoundButton.onClick = [this] { loadDefaultSound(); initStartStop();  };
     loopButton.onClick             = [this] { loopButton.getToggleState() ? isLooping = true : isLooping = false; };
 
-    // loopButton.getToggleState() ? isLooping = true : isLooping = false;
-    // equivalent to
-    // if( loopButton.getToggleState() )
-    //    isLooping = true;
-    // else
-    //    isLooping = false;
-
-
-    durationMinTE.onTextChange     = [this] { minDuration = durationMinTE.getText().getIntValue(); };
-    durationMaxTE.onTextChange     = [this] { maxDuration = durationMaxTE.getText().getIntValue(); };
+    durationMinTE.onTextChange     = [this] { ranges.minDuration = durationMinTE.getText().getIntValue(); };
+    durationMaxTE.onTextChange     = [this] { ranges.maxDuration = durationMaxTE.getText().getIntValue(); };
     densityTE.onTextChange         = [this] { applyDensityOrMetroDensity(densityTE.getText().getIntValue()); };
     granularButton.onClick         = [this] { granularButton.getToggleState() ? isGranularizing = true : isGranularizing = false; };
-    makeGrainButton.onClick        = [this] { makeGrain(); };
+    // The line below works, because ranges.minduration and ranges.maxDuration have been initialized above with related GUI elements values
+    makeGrainButton.onClick        = [this] { makeGrain( ranges.minDuration, ranges.maxDuration ); };
 
     densityMetroButton.onClick = [this] { 
         densityMetroButton.getToggleState() ? useMetro = true : useMetro = false; 
         applyDensityOrMetroDensity(densityTE.getText().getIntValue()); 
     };
 
-    //thumbnailHorizontalPosition = 100;
-
+    
     // Make sure you set the size of the component after
     // you add any child components.
-    setSize (450, 300);
+    setSize (450, 100);
 
     // Some platforms require permissions to open input channels so request that here
     if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
@@ -112,13 +88,10 @@ MainComponent::MainComponent()
     else
     {
         // Specify the number of input and output channels that we want to open
-        setAudioChannels (2, 2);
+        setAudioChannels (0, 2);
     }
 
     formatManager.registerBasicFormats();
-    //transportSource.addChangeListener(this);
-    //thumbnail.addChangeListener(this);
-
 }
 
 MainComponent::~MainComponent()
@@ -172,25 +145,14 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
             }
             channelData[sample]   = fileData [filePosition];
         }
-/*
-        if (filePosition < numSamplesInFile) 
-        {
-            ++filePosition;
-        }
-        else if (isLooping) 
-        {
-            filePosition = 0;
-        }
-*/        
-        if (filePosition < grainStopSample)
+       
+        if (filePosition < currentGrain.stop_sample)
         {
             ++filePosition;
         }
         else if (isLooping)
         {
-            // was : 
-            // filePosition = 0;
-            filePosition = grainStartSample;
+            filePosition = currentGrain.stop_sample;
         }
     }
 }
@@ -207,15 +169,6 @@ void MainComponent::releaseResources()
 void MainComponent::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
- /*   g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
-    
-    juce::Rectangle<int> thumbnailBounds(10, thumbnailHorizontalPosition, getWidth() - 20, getHeight() - 120);
-
-    if (thumbnail.getNumChannels() == 0)
-        paintIfNoFileLoaded(g, thumbnailBounds);
-    else
-        paintIfFileLoaded(g, thumbnailBounds);
-*/
     // You can add your drawing code here!
 }
 
@@ -313,7 +266,6 @@ void MainComponent::loadDefaultSound ()
             true);                                                            //  [5.5]
         filePosition = 0;                                                                   // [6]
         setAudioChannels(0, (int)reader->numChannels);
-        //thumbnail.setSource(new juce::FileInputSource(defaultSoundFile));
     }
 
 }
@@ -352,96 +304,61 @@ void MainComponent::openButtonClicked()
                     true);                                                            //  [5.5]
                 filePosition = 0;                                                                   // [6]
                 setAudioChannels (0, (int)reader->numChannels);                                // [7]
-                //thumbnail.setSource (new juce::FileInputSource(file));
-
             }
         });
 }
-/*
-void MainComponent::thumbnailChanged()
-{
-    repaint();
-}
 
-void MainComponent::paintIfNoFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds)
-{
-    g.setColour(juce::Colours::darkgrey);
-    g.fillRect(thumbnailBounds);
-    g.setColour(juce::Colours::white);
-    g.drawFittedText("No File Loaded", thumbnailBounds, juce::Justification::centred, 1);
-}
 
-void MainComponent::paintIfFileLoaded(juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds)
-{
-    g.setColour(juce::Colours::white);
-    g.fillRect(thumbnailBounds);
-
-    g.setColour(juce::Colours::red);                               // [8]
-
-    thumbnail.drawChannels(g,                                      // [9]
-        thumbnailBounds,
-        0.0,                                    // start time
-        thumbnail.getTotalLength(),             // end time
-        1.0f);                                  // vertical zoom
-}
-
-void MainComponent::changeListenerCallback(juce::ChangeBroadcaster* source)
-{
-//    if (source == &transportSource) transportSourceChanged();
-    if (source == &thumbnail)       thumbnailChanged();
-}
-*/
 /** Compute grain in and out point based on GUI elements.
    
     */
-void MainComponent::makeGrain()
+void MainComponent::makeGrain( int minDuration, int maxDuration )
 {
-    auto grainDuration = 0;
     if (minDuration != maxDuration)
     {
-        grainDuration = juce::Random::getSystemRandom().nextInt (juce::Range<int> (minDuration, maxDuration));
+        currentGrain.duration_ms = juce::Random::getSystemRandom().nextInt (juce::Range<int> (minDuration, maxDuration));
     }
     else
     {
-        grainDuration = minDuration;
+        currentGrain.duration_ms = minDuration;
     }
 
-    grainDurationSample = int( grainDuration * samplingRate / 1000 );
+    currentGrain.duration_sample = int( currentGrain.duration_ms * samplingRate / 1000 );
 
     // Prevent from having grainStartSample + grainDuration > fileBuffer.getNumSamples()
-    grainStartSample = juce::Random::getSystemRandom().nextInt(fileBuffer.getNumSamples()-grainDuration);
-    grainStopSample = grainStartSample + grainDurationSample;
+    currentGrain.start_sample = juce::Random::getSystemRandom().nextInt( fileBuffer.getNumSamples()- currentGrain.duration_sample );
+    currentGrain.stop_sample  = currentGrain.start_sample + currentGrain.duration_sample;
     
-    auto grainStartSampleString    = juce::String (int (grainStartSample / samplingRate * 1000));
-    auto grainStopSampleString     = juce::String (int (grainStopSample / samplingRate * 1000));
-    auto grainDurationSampleString = juce::String (grainDuration);
+    auto grainStartSampleString    = juce::String (int (currentGrain.start_sample / samplingRate * 1000));
+    auto grainStopSampleString     = juce::String (int (currentGrain.stop_sample / samplingRate * 1000));
+    auto grainDurationSampleString = juce::String (int (currentGrain.duration_sample / samplingRate * 1000));
 
     grainInPointFeedbackTE .setText (grainStartSampleString, juce::dontSendNotification);
     grainOutPointFeedbackTE.setText (grainStopSampleString, juce::dontSendNotification);
     grainDurationFeedbackTE.setText (grainDurationSampleString, juce::dontSendNotification);
 
-    filePosition = grainStartSample;
+    filePosition = currentGrain.start_sample;
 }
 
 void MainComponent::initStartStop()
 {
-    grainStartSample = 0;
-    grainStopSample = fileBuffer.getNumSamples(); 
+    currentGrain.start_sample = 0;
+    currentGrain.stop_sample = fileBuffer.getNumSamples();
 }
 
 void MainComponent::timerCallback()
 {
     //DBG ("Making a new grain every " << this->density << " ms");
-    makeGrain ();
+    makeGrain ( ranges.minDuration, ranges .maxDuration );
 }
 
 void MainComponent::applyDensityOrMetroDensity( int densityFromGUI)
 {
-    this->density = densityFromGUI;
+    ranges.density = densityFromGUI;
     if (useMetro)
     {
         stopTimer();
-        startTimer(density);
+        startTimer(ranges.density);
     }
     else
     {
