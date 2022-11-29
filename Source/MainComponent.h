@@ -13,7 +13,7 @@
 */
 class MainComponent  : public juce::AudioAppComponent,
                        //public juce::ChangeListener,
-                       private juce::Timer
+                       private juce::Timer // Timing is handled here by the juce::Timer class and the timerCallback function (private)
 {
 public:
     //==============================================================================
@@ -32,12 +32,6 @@ public:
     // Added functions
     void loadDefaultSound ();
     void openButtonClicked ();
-
-    // From https://docs.juce.com/master/tutorial_audio_thumbnail.html
-    //void thumbnailChanged       ();
-    //void paintIfNoFileLoaded    (juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
-    //void paintIfFileLoaded      (juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds);
-    //void changeListenerCallback (juce::ChangeBroadcaster* source) override;
 
     /** Init grainStartSample and grainStopSample when a file is loaded.
 
@@ -72,6 +66,7 @@ private:
     // Your private member variables go here...
     void timerCallback() final;
 
+    // These two structures will be useful when moving to "real" granular synthesis
     struct GrainsConfig {
         int minDuration;
         int maxDuration;
@@ -117,9 +112,6 @@ private:
     juce::AudioSampleBuffer  fileBuffer;
     
     const juce::String defaultSoundFilePath = "D:\\NewTmpWorkingRepo\\Cours\\AudioProcessing\\JUCE\\violin.wav";
-    //juce::AudioThumbnailCache thumbnailCache;   
-    //juce::AudioThumbnail thumbnail;
-    //int thumbnailHorizontalPosition;
 
     bool isLooping = false, isGranularizing=false, useMetro=false, computeGrainInAndOut=false;
 
