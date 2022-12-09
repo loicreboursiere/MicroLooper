@@ -32,6 +32,8 @@ public:
     // Added functions
     void loadDefaultSound ();
     void openButtonClicked ();
+    void panning(float position);
+    float sineWaveLFO(float position);
 
     /** Init grainStartSample and grainStopSample when a file is loaded.
 
@@ -67,7 +69,7 @@ private:
     void timerCallback() final;
 
     // These two structures will be useful when moving to "real" granular synthesis
-    struct GrainsConfig {
+    struct GrainsConfig {//objet ranges
         int minDuration;
         int maxDuration;
         int minStart;
@@ -75,7 +77,7 @@ private:
         int density;
     };
 
-    struct Grain {
+    struct Grain {//objet currentGrain
         int start_ms;
         int stop_ms;
         int duration_ms;
@@ -84,12 +86,30 @@ private:
         int duration_sample;
     };
 
-    juce::TextButton   loadButton;
-    juce::TextButton   loadDefaultSoundButton;
+    struct StereoFrame {//gestion de la stereo
+        float position;
+        double leftSample = 1;
+        double rightSample = 1;
+    };
+
+    struct SineWave {
+        float sampleRate = 1;
+        float currentAngle = 0;
+    };
+
+    juce::TextButton   loadButton { "Open..." };
+    juce::TextButton   loadDefaultSoundButton { "Default" };
     juce::ToggleButton loopButton { "Loop" };
     juce::ToggleButton granularButton { "Granular" };
     juce::TextButton   makeGrainButton { "Grain" };
     juce::ToggleButton densityMetroButton{ "Use density as metro" };
+    juce::ToggleButton stereoRandomButton{ "Random Stereo" };
+    juce::ToggleButton stereoButton{ "L or R" };
+    juce::ToggleButton sinusButton{"Sinewave"};
+    juce::ToggleButton sliderButton{ "ON/OFF" };
+
+
+
 
     juce::Label        durationLabel;
     juce::Label        durationMinLabel;
@@ -105,15 +125,26 @@ private:
     juce::Label        grainInPointFeedbackTE;
     juce::Label        grainOutPointFeedbackTE;
     juce::Label        grainDurationFeedbackTE;
+    juce::Label        titleLabel;
+    juce::Label        textPannerLabel{ "Left . . . Right" };
+    juce::Label        lfoModeLabel{ "MODES :" };
+
+
+
 
     std::unique_ptr<juce::FileChooser> chooser;
 
     juce::AudioFormatManager formatManager;
     juce::AudioSampleBuffer  fileBuffer;
-    
-    const juce::String defaultSoundFilePath = "D:\\NewTmpWorkingRepo\\Cours\\AudioProcessing\\JUCE\\violin.wav";
 
-    bool isLooping = false, isGranularizing=false, useMetro=false, computeGrainInAndOut=false;
+    juce::Slider stereoSlider;
+    
+    
+    const juce::String defaultSoundFilePath = "C:\\Users\\ferja\\Documents\\22\ MTek\\untitled.wav";
+    
+
+    bool isLooping = false, isGranularizing=false, useMetro=false, computeGrainInAndOut=false, isLeft=true, isSinus = false, isRandomStereo = false, isSliderOn = false;
+    
 
     int filePosition;// , grainStartSample, grainStopSample, grainDurationSample;
 
@@ -125,6 +156,8 @@ private:
 
     GrainsConfig ranges;
     Grain currentGrain;
+    StereoFrame stereoFrame;
+    SineWave sineWave;
 
     //juce::Array<Grain> allGrains;
 
